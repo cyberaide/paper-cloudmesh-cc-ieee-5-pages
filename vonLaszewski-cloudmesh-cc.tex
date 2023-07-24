@@ -428,11 +428,7 @@ of the workflows  \cite{www-snakemake,las-2004-gridant,www-pegasus,las-2007-swif
 \section{Design}
 \label{sec:design}
 
-To fulfill our requirements, we have developed a sophiticated but easy to use framework for controlling three aspects of our workflow needs: (a) the placement of the workflow onto a number of different compute resources including HPC, cloud, and loacl computing while also providing adaptations to various batch queues, (b) the coordination of task-based parallelelism to execute the workflow on the various resources, and (c) the coordination of hyperparameter sweeps used in the application that we call experiment coordinator.
-
-workflow-controlled computing called Cloudmesh Compute Cluster,
-otherwise referred to as {\em cloudmesh-cc}. It is enhanced by a
-specialized experiment executor, allowing to easily specify parameter-enhanced workflow specifications. The architecture of the
+To fulfill our requirements, we have developed a sophiticated but easy to use framework for controlling several aspects of our workflow needs: (a) {\em System Integration}: the placement of the workflow onto a number of different compute resources including HPC, cloud, and local computing while also providing adaptations to various batch queues, (b) {\em Compute Coordination}: the coordination of task-based parallelelism to execute the workflow on the various resources, and (c) {\em Experiment Executor\footnote{The repository and name is at this time called cloudmesh-sbatch, but will be renamed to cloudmesh-ee to reflect the better name of Experiemnet Executor}}: the coordination of hyperparameter sweeps used in the application that we call experiment coordinator. The architecture of the
 framework is depicted in Figure~\ref{fig:arch}.
 
 \begin{figure}[htb]
@@ -443,9 +439,11 @@ framework is depicted in Figure~\ref{fig:arch}.
 \end{figure}
 
 The framework is based on a layered architecture so that it can be improved
-and expanded on at each layer. We distinguish two kinds of users---developers 
-and end users---that define their workflows to run on
-computing resources. For the end user, we provide a command line and a
+and expanded on at each layer. We distinguish multiple users including developers, 
+commandline and service users, that define their workflows to run on
+computing resources. 
+
+For the end user, we provide a command line and a
 very simple browser interface. Simplicity is important as it does not
 require spending exorbitant amounts of time to learn how to use the
 workflow framework. To support developers, we have designed a minimal
