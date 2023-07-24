@@ -236,7 +236,6 @@ As part of this activity, we are collaborating with a number of researchers, inc
 Together thesa aspects introduce a high entry barrier that are time consuming to overcome.
 
 What we strive to achieve is to make the situation simpler for the domain scientists and students while working at the same time towards the implementation of the FAIR principle \cite{www-fair} for the targeted MLCommons Science applications addressing the previously mentioned issues. As part of this, we focus on the implementation of hybrid task parallelism to address reproducibility on multiple target machines, leveraging parallel computing concepts. Additionally, we apply experiment management parallelism that automates the process of running permutations over various hyperparameters. Together these two concepts provide a powerful easy-to-use framework that we designed and implemented.
-
 Although we are applying our approach to other applications, we focus here on the MLCommons Cloudmask \cite{las-22-mlcommons-science} application that tries to identify the cloud cover from satellite images.
 
 The paper is structured as follows. First, we discuss the important requirement aspects that influenced the design and implementation of our work in Section \ref{sec:requirements}. We then provide an overview of related research in Section \ref{sec:related-research}. Next, we present the design of the workflow framework in Section~\ref{sec:design}. To demonstrate the practical use of the framework, we showcase its capabilities to specify task-based workflows in Section \ref{sec:task-workflow}, followed by a detailed discussion on how to interface with the workflows in Section \ref{sec:cloudmesh-cc-interfaces}. Additionally, we briefly outline other notable cloudmesh features in Section \ref{sec:cloudmesh-other}. Furthermore, we illustrate how cloudmesh can effectively coordinate hyperparameter-based workflows for the cloudmask application in Section \ref{sec:cloudmask-workflow}. Finally, we present our conclusions in Section \ref{sec:conclusion}.
@@ -247,10 +246,8 @@ The paper is structured as follows. First, we discuss the important requirement 
 
 We list briefly the requirements that influence our design while focusing on reusability and design requirements. A more in-depth discussion can be found in \cite{las-22-arxiv-workflow-cc}.
 
-\subsection{Reusability Requirements}
-
-One important requirement is to address the reusability of the benchmark across different platforms under similar conditions. This can be achieved with benchmark templates that can easily be adapted and then their execution replicated on other platforms. 
-However, in scientific applications, we not only target aone application on the systems, and one specific hyperparameter configuration, but we are interrested in finding out which application and which hyperparameters for that application are best to achieve the best accuracy. Hence, it is important to improve the accuracy while identifying guidelines for resource consumption to achieve the best accuracy promoting the FAIR principle \cite{www-fair}. 
+{\em Reusability Requirements.} One important requirement is to address the reusability of the benchmark across different platforms under similar conditions. This can be achieved with benchmark templates that can easily be adapted and then their execution replicated on other platforms. 
+However, in scientific applications, we not only target one application on the systems, and one specific hyperparameter configuration showcaseing the scalability of the system, but we are interested in finding out which application and which hyperparameters for that application are best to achieve the best accuracy. Hence, it is important to improve the accuracy while identifying guidelines for resource consumption to achieve the best accuracy promoting the FAIR principle \cite{www-fair}. 
 
 \begin{comment}
 \subsubsection{Reusable Computational Analytics}
@@ -314,9 +311,7 @@ resources (a PC, for example).
 
 \end{comment}
 
-\subsection{Design Requirements}
-
-For the design of the framework, we have the following requirements: (a) Simplicity, so that the framework can be easily reused, (b) Specificity, so the workflow can be specified precisely (c) Generality so that the workflow can be generally integrated as part of different frameworks or languages, (d) Monitoribility, so we can monitor long-running workflows, (e) Hybrid Resource integration, allowing the integration of on-premise and off-premises  HPC or cloud computing resources (f) Recoverable, so that state management can be recovered upon failure (g) Zero-install, so that no backend services need to be available on the compute resources and minimalistic existing services are used. 
+{\em Design Requirements.} For the design of the framework, we have the following requirements: (a) Simplicity, so that the framework can be easily reused, (b) Specificity, so the workflow can be specified precisely (c) Generality so that the workflow can be generally integrated as part of different frameworks or languages, (d) Monitoribility, so we can monitor long-running workflows, (e) Hybrid Resource integration, allowing the integration of on-premise and off-premises  HPC or cloud computing resources (f) Recoverable, so that state management can be recovered upon failure (g) Zero-install management install, so that no backend services need to be available on the compute resources and existing services are used. 
 
 \begin{comment}
 \subsubsection{Simplicity}
@@ -382,12 +377,13 @@ workflow framework can be refreshed with the latest state.
 
 Many different workflow systems have been developed in the past. It is
 out of the scope of this document to present a complete overview of
-all the different systems. Instead, 
+such different systems. Instead, 
 % we list some of the systems and organize them in various categories within this section. 
-we refer to \cite{las-22-arxiv-workflow-cc} where a more detailed analysis is provided. One of the systems that has been developed recently is MLCube \cite{www-mlcube} which is an activity within MLCommons. Similar to our framework, it uses YAML specification for organizing, running, and sharing machine learning experiments. It attempts to standardize the 
+we refer to \cite{las-22-arxiv-workflow-cc} where a more detailed analysis is provided. One of the systems that has been developed recently as part of MLCommons recently is MLCube \cite{www-mlcube}. While some aspects are similar, our system has a different focus when applied to the applications.
+Similar to our framework, MLCube uses YAML specification for organizing, running, and sharing machine learning experiments. It attempts to standardize the 
  format for defining and packaging machine learning projects, including their code, dependencies, datasets, and configurations. Through this, it aims to 
  facilitate the reproducibility and portability of machine learning experiments by encapsulating all the necessary components in a self-contained and portable container. Our system is needed as it provides both an enhancement on top of MLCube, as well as on the bottom.
- Thus, we could integrate tools and services we developed within an MLCube specification, but also use MLCube within our framework. One of the features we try to emphasize is that we do not distribute a container in general, but just the description of how the container can be created either in Docker or Singularity. This is important when the customization of the experiment and its applications is in the foreground. Furthermore, at the time of writing, the support of MLCube for Singularity was not supporting our locally available resources (on which Docker is not supported) so we could not utilize it. As a result, our team has proposed changes to MLCube that will eventually result in a usable Singularity port. It is important to note that our tool can be used not only to run a single performance experiment across different target machines utilizing a number of GPUs or CPUs, but it can also be used as an effective search tool to identify hyperparameter settings while permutation through them and observe changes in the scientific accuracy value. 
+ Thus, we can integrate tools and services we developed within an MLCube specification, but also use MLCube within our framework. One of the features we try to emphasize is that we do not distribute a container in general, but templated description of how the container can be created either in Docker or Singularity. This is important when the customization of the experiment and its applications is in the foreground and modifications to the software contained in the container lead to improvements. Furthermore, at the time of writing, the support of MLCube for Singularity was not supporting our locally available HPC resources (on which Docker is also not supported). Thus it was not possible to utilize it. As a result, our team has proposed changes to MLCube that will eventually result in a usable Singularity port. However, it is important to note that our tool can be used not only to run a single performance experiment across different target machines utilizing a number of GPUs or CPUs, but it can also be used as an effective search tool to identify hyperparameter settings while permutation through them and observe changes in the scientific accuracy value. This is typically outside the goal of other MLCommon benchmarks as they assume a static set of hyperparameters across the different systems.
 
 \begin{comment} 
 Next, we list the various categories of related workflow systems while augmenting them with references. By no means is this list complete; it represents a selected number of efforts. 
@@ -432,7 +428,8 @@ of the workflows  \cite{www-snakemake,las-2004-gridant,www-pegasus,las-2007-swif
 \section{Design}
 \label{sec:design}
 
-To fulfill our requirements, we have developed a framework for
+To fulfill our requirements, we have developed a sophiticated but easy to use framework for controlling three aspects of our workflow needs: (a) the placement of the workflow onto a number of different compute resources including HPC, cloud, and loacl computing while also providing adaptations to various batch queues, (b) the coordination of task-based parallelelism to execute the workflow on the various resources, and (c) the coordination of hyperparameter sweeps used in the application that we call experiment coordinator.
+
 workflow-controlled computing called Cloudmesh Compute Cluster,
 otherwise referred to as {\em cloudmesh-cc}. It is enhanced by a
 specialized experiment executor, allowing to easily specify parameter-enhanced workflow specifications. The architecture of the
