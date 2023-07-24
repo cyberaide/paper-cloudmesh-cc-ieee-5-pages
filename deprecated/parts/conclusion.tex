@@ -1,0 +1,29 @@
+\FILE{conclusion.tex}
+
+\section{Conclusion}
+
+We have designed and implemented a Hybrid Reusable Computational
+Analytics Workflow Management with the help of the cloudmesh
+component framework. The component added focuses on the management of
+workflows for computational analytics tasks and jobs. The tasks can be
+executed on remote resources via ssh and even access queuing systems
+such as SLURM. In addition, we can integrate the current computer on
+which the workflow is running. This can include operating systems such
+as Linux, macOS, Windows, and even Windows Subsystem for Linux. Through
+cloudmesh access to a command line and a command shell is provided. A
+simple API and a REST interface are provided. The framework has also an
+elementary Web browser interface that allows visualizing the
+execution of the workflow.  It is important to know that the workflow
+can be started on remote resources and is running completely
+independently from the client tool once a task is started. This allows a
+``stateless'' model that can synchronize with the remotely started jobs
+on demand. Hence the framework is self-recovering in case of network
+interruptions or power failure. Due to our experiences with real (and
+many) infrastructure failures at the authors' locations, the
+availability of such a workflow-guided system was
+beneficial. Furthermore, the code developed is rather small and in
+contrast to other systems is less complex. Hence it is suitable for
+educational aspects as it is used for Master's level and undergraduate
+research projects. The project has also been practically utilized while
+generating benchmarks for the MLcommons Science Working Group
+showcasing real-world applicability beyond a student research project.

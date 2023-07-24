@@ -1,0 +1,55 @@
+\FILE{installation.tex}
+
+\subsection{Installation}\label{installation}
+
+To leverage cloudmesh-cc, use the cloudmesh-installer to install the
+Cloudmesh suite of repositories. Optionally, to utilize the graph
+visualization you must install also {\em graphviz} must be
+installed. On Windows, Git Bash is required, in addition.  The overall
+installation is very simple and is supported on a variety of operating
+systems.  We leverage the cloudmesh-installer to locally install the
+cloudmesh suite of repositories by executing the following commands:
+
+\begin{minted}[breaklines]{bash}
+$ mkdir ~/cm
+$ cd ~/cm
+$ pip install cloudmesh-installer -U
+$ cloudmesh-installer get cc
+\end{minted}
+
+To install graphviz you can use the following commands on the appropriate operating system:
+
+\begin{description}
+
+\item[Windows.]
+Git Bash and Graphviz must be installed.
+The user can use an instance of Chocolatey that is run as an administrator for convenience:
+
+\begin{minted}[breaklines]{bash}
+$ choco install git.install --params "/GitAndUnixToolsOnPath /Editor:Nano /PseudoConsoleSupport /NoAutoCrlf" -y
+$ choco install graphviz -y
+\end{minted}
+
+\item[macOS.] Graphviz must be installed. The user can use Homebrew for convenience:
+
+\begin{minted}[breaklines]{bash}
+$ brew install graphviz
+\end{minted}
+
+\item[Linux.] Graphviz must be installed. The user can use apt for convenience:
+
+\begin{minted}[breaklines]{bash}
+$ sudo apt install graphviz -y
+\end{minted}
+
+\end{description}
+
+To test the workflow program, prepare a cm directory in your home
+directory by executing the following commands:
+
+\begin{minted}[breaklines]{bash}
+$ cd ~/cm/cloudmesh-cc
+$ pytest -v -x --capture=no tests
+\end{minted}
+
+A variety of separate tests are available that test individual capabilities. 

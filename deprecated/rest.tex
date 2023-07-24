@@ -1,0 +1,124 @@
+\FILE{rest.tex}
+
+\section{REST}\label{rest}
+
+Cloudmesh cc can be interfaced with Representational State Transfer
+(REST) by using Curl commands. REST is advantageous as it can be used
+with programming languages other than Python.
+
+To use this feature, ensure that the FastAPI server is online with the
+following commands:
+
+\begin{minted}[breaklines]{bash}
+$ cd ~/cm/cloudmesh-cc
+$ cms cc start
+\end{minted}
+
+\subsection{List Workflows Available on Local
+Computer}\label{list-workflows-available-on-local-computer}
+
+The following command returns a dict that lists each available workflow.
+
+\begin{minted}[breaklines]{bash}
+curl -X 'GET' 'http://127.0.0.1:8000/workflows' -H 'accept: application/json'
+\end{minted}
+
+\subsection{Upload a Workflow}\label{upload-a-workflow}
+
+There are different ways to upload a new workflow to cloudmesh-cc, by
+specifying one of the following:
+
+\smallskip
+\begin{itemize}
+\item
+  a directory that contains the scripts and YAML
+\end{itemize}
+
+\begin{minted}[breaklines]{bash}
+curl -X 'POST' 'http://127.0.0.1:8000/workflow?\
+directory=~/cm/cloudmesh-cc/tests/workflow-example' -H 'accept: application/json' -d ''
+\end{minted}
+\smallskip
+
+\smallskip
+\begin{itemize}
+\item
+  an archive file in tgz, xz, tar.gz, or tar format that contains the
+  scripts and yaml
+\end{itemize}
+
+\begin{minted}[breaklines]{bash}
+curl -X 'POST' 'http://127.0.0.1:8000/workflow?\ 
+archive=ThePathToYourArchiveFile' -H 'accept: application/json' -d ''
+\end{minted}
+\smallskip
+
+\smallskip
+\begin{itemize}
+\item
+  or a yaml file that specifies what jobs to run.
+\end{itemize}
+
+\begin{minted}[breaklines]{bash}
+curl -X 'POST' 'http://127.0.0.1:8000/workflow?\
+yaml=~/cm/cloudmesh-cc/tests/workflow-example\
+/workflow-example.yaml' -H 'accept: application/json' -d ''
+\end{minted}
+\smallskip
+
+\subsection{Delete a Workflow}\label{delete-a-workflow}
+
+The following command deletes a preexisting workflow from the local
+computer.
+
+To use it, replace \texttt{workflow-example} with the workflow you wish
+to delete.
+
+\begin{minted}[breaklines]{bash}
+curl -X 'DELETE' 'http://127.0.0.1:8000\
+/workflow/workflow-example' -H 'accept: application/json'
+\end{minted}
+
+\subsection{Retrieve a Workflow}\label{retrieve-a-workflow}
+
+The following command retrieves a workflow and its configuration, such
+as the directory where it resides, the jobs that it contains, the colors
+of the statuses, and more.
+
+To use it, replace \texttt{workflow-example} with the workflow you wish
+to retrieve.
+
+\begin{minted}[breaklines]{bash}
+curl -X 'GET' 'http://127.0.0.1:8000/workflow\
+/workflow-example' -H 'accept: application/json'
+\end{minted}
+
+\subsection{Run a Workflow}\label{run-a-workflow}
+
+The following command runs a workflow.
+
+To use it, replace \texttt{workflow-example} with the workflow you wish
+to run. Additionally, to hide the graph of the workflow as it is run,
+replace \texttt{show=True} with \texttt{show=False}.
+
+\begin{minted}[breaklines]{bash}
+curl -X 'GET' 'http://127.0.0.1:8000/workflow\
+/run/workflow-example?show=True' -H 'accept: application/json'
+\end{minted}
+
+\subsection{Add a Job to a Workflow}\label{add-a-job-to-a-workflow}
+
+The following command adds a new job to a preexisting workflow.
+
+The only required parameter is the job parameter, which specifies the
+name of the job. The other optional parameters include the user, host,
+label, kind, status, progress, and script. To use the command, replace
+\texttt{workflow-example} with the workflow you wish to change.
+Additionally, change the other parameters, as desired.
+
+\begin{minted}[breaklines]{bash}
+curl -X 'POST' 'http://127.0.0.1:8000/workflow\
+/job/workflow-example?job=myJob&user=aPerson\
+&host=local&kind=local&status=ready&\
+script=aJob.sh&progress=0&label=aLabel' -H 'accept: application/json'
+\end{minted}

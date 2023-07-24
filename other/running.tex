@@ -1,0 +1,59 @@
+
+\begin{figure}[htb]
+
+{\scriptsize\begin{verbatim}
+  $ cms vm start --cloud aws
+  $ cms vm start --cloud azure
+\end{verbatim}}
+
+\caption{Simple VM management for hybrid clouds}
+\label{fig:cms}
+\end{figure}  
+
+
+\subsection{Run the workflow}\label{run-the-workflow}
+
+The workflow can be run easily via the GUI. We added a special set of
+buttons to the workflow table and graph display to simplify running of
+the workflow. Certainly, the workflow can also be activated while
+calling the appropriate REST call, either through Python, the OpenAPI
+docs page, or, for example, a curl call.
+Figures~\ref{fig:workflow-run-a}-\ref{fig:workflow-run-c}
+showcase various methods to run the example workflow, which is called
+{\em workflow-example}.
+
+
+\begin{figure}[htb]
+
+{\scriptsize\begin{verbatim}
+  $ curl -X 'GET' 'http://127.0.0.1:8000/
+                   workflow/run/workflow-example?show=True'
+         -H 'accept: application/json'
+\end{verbatim}}% $
+
+\caption{Running the example workflow with curl.}
+\label{fig:workflow-run-a}
+\bigskip
+
+{\scriptsize\begin{verbatim}
+  from cloudmesh.cc.workflowrest import RESTWorkflow
+  rest = RESTWorkflow()
+  result = rest.run_workflow('workflow-example')
+\end{verbatim}}
+
+\caption{Running the example workflow with cloudmesh RESTWorkflow API.}
+\label{fig:workflow-run-b}
+\bigskip
+
+{\scriptsize\begin{verbatim}
+  import requests
+  url = 'http://127.0.0.1:8000/workflow/run/'\
+        'workflow-example?show=True'
+  r = requests.get(url)
+  print(r)
+\end{verbatim}}
+
+\caption{Running the example workflow with requests API.}
+\label{fig:workflow-run-c}
+
+\end{figure}

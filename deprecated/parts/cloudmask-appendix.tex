@@ -1,0 +1,12 @@
+\FILE{cloudmask-appendix.tex}
+
+\subsection{Running Cloudmask Workflow}\label{sec:running-cloudmask}
+
+To run the Cloudmask workflow, run the following commands:
+
+\begin{minted}[breaklines]{bash}
+$ cd ~/cm
+$ git clone https://github.com/laszewsk/mlcommons.git
+$ cd mlcommons
+$ pytest -v -x --capture=no benchmarks/cloudmask/target/rivanna/run_cloudmask_workflow.py
+\end{minted}

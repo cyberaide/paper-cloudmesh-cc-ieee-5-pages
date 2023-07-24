@@ -1,0 +1,35 @@
+\FILE{mnist.tex}
+
+\subsection{MNIST Workflow}\label{mnist-workflow}
+
+MNIST is a well-known program to detect handwritten digits. It
+provides for our work value because it is well understood and is used
+in many educational efforts. Also here we created a workflow that
+integrates the UVA Rivanna HPC (it can easily be adapted to other machines).
+The nice feature about this application is that it can be configured
+to run very quickly while still using various GPUs and benchmark their runtimes for running
+several MNIST Python programs. These programs include machine learning
+processing, convolutional neural network, long short-term memory,
+recurrent neural network, and others. The programs can be found on
+GitHub~\cite{www-mnist-programs}.
+
+As for the workflow we adapted it not only to run one algorithm but
+multiple in an iteration across the GPUs (similar to \ref{fig:cloudmaskwf}).
+
+On a successful run, the output will be receiving runtimes similar to:
+
+\begin{table}[!ht]
+\caption{MNIST Performance as obtained by cloudmesh-cc on various graphics cards using workflow scheduling}
+    \centering
+    \begin{tabular}{lr}
+    \hline
+        Name & Time \\ \hline
+        a100 & 106.046 \\ 
+        v100 & 138.087 \\ 
+        rtx2080 & 138.048 \\
+        k80 & 171.057 \\ 
+        p100 & 202.055 \\
+    \end{tabular}
+    \label{table:mnist-times}
+  \end{table}
+  

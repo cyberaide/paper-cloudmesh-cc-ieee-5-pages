@@ -1,0 +1,18 @@
+\FILE{cloudmesh.tex}
+
+\section{Other Cloudmesh Features}
+
+Cloudmesh comes with a sophisticated package management system, allowing to integrate packages on demand targeting varipus providers ond capabilities including a build in command shell and not just aonly a commanline tool.  Cloudmesh was first develped as a hybrid cloud API, commandline and command shell framework. It provided interfaces to AWS, Azure, Google, and OpenStack clouds for virtual machine\footnote{cloudmesh also provded support for clouds that are no longer supported such as Eucalyptsus and open cirrus. Academic clouds such as Chameloncloud were also supported.} and data file services. It is characterized be defining default templates for virtual machine management on these clouds. Hence it was possible to switch with only a view commands between clouds and stage virtual machines on them such as demonstarted in Figure~\ref{fig:cms}.
+
+\begin{figure}[htb]
+
+\begin{minted}[breaklines]{bash}
+$ cms vm start --cloud aws
+$ cms vm start --cloud azure
+\end{minted}
+
+  \caption{Simple VM managegment for hybrid clouds}
+\label{fig:cms}.
+\end{figure}  
+
+In addition we have also developed a pacage called GAS that addresses the creation of analytics REST services from python functios. This package was developed to address the problem that integrating deployment frameworks in the age of cloud computing is often out of reach for domain experts.  GAS is a simple frameworks allowing even non-experts to deploy and host services in the cloud. To avoid vendor lock-in it supports multiple vendors through the use of cloudmesh vm management \cite{las21-gas}.

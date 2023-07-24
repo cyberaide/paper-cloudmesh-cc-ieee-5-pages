@@ -1,0 +1,59 @@
+\FILE{requirements.tex}
+
+\section{Requirements}
+
+For the design of the framework, we have the following requirements.
+
+\begin{description}
+
+\item[Simplicity.] The design must be simple and the code base must be small.
+This helps the future maintenance of the code, but also allows the code
+to become part of educational opportunities such as in a Research
+Experience for Undergraduates (REU), capstone project, and class
+projects. The challenge here is that many other systems are too big to
+be used in introductory undergraduate and masters activities.
+However, the framework should be capable enough to also support research projects.
+
+\item[Workflow specification.] The specification of the workflow must be simple.
+From the past we have learned that the introduction of programming control
+components such as loops, and conditions, in addition to DAGs, is
+essential to provide maximum flexibility.
+
+\item[Workflow Monitoring.] The workflow framework must be able to monitor the
+progress of individual jobs as well as the overall progress of the workflow.
+
+\item[Workflow Interfaces.] To specify and interface with the workflow, we
+must provide several interface layers. This includes specification
+through a YAML file, interfacing through REST calls, interfacing
+through a Python API, and interfacing with a very simple GUI component.
+For the workflow monitoring with the GUI, we must be able to easily
+define custom text to reflect user designable monitoring labels.
+
+\item[Language Independence.] As we want to make the framework integrable in
+other frameworks, we need a simple mechanism to provide either API or
+interface portability. To keep the code base small, a REST API seems
+very well-suited.
+
+\item[OpenAPI.] To further strengthen usability, the framework must have an
+OpenAPI interface. This allows the integration via 3rd party tools into
+other frameworks and languages, if desired.
+
+\item[Hybrid multicloud Providers.] The service must be able to be deployable
+on an on-premise local computer or various cloud providers.
+
+\item[Generalized Job Interface.] The framework must be able to interface 
+with a wide variety of computation services. This includes the support
+of ssh, batch queues such as Slurm and LSF, and local compute resources
+including shell scripts, as well as support for WSL.
+
+\item[Support of various Operating Systems.] The framework must be runnable on
+various client operating systems including Linux, macOS, Windows.
+
+\item[State Management.] The state management must be recoverable and the
+client must be able to completely recover from a network failure.
+As such, the state will be queried on demand. This allows one to deploy
+the framework on a laptop, start the workflow, close or shutdown the
+laptop, and at a later time open the laptop while the workflow framework
+can be refreshed with the latest state.
+
+\end{description}

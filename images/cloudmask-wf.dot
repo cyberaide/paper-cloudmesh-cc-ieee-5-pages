@@ -1,0 +1,29 @@
+strict digraph {
+     rankdir=TB;
+     node [shape=box style=rounded];
+     start -> amd5950X
+     subgraph cluster_0 {
+         label = "Compute Resource \n Desktop A";
+      amd5950X -> "fetch data to amd5950X" -> "rtx3090 benchmark";
+     }
+     "rtx3090 benchmark" -> end;
+     
+     start -> "i9-9900K"
+     subgraph cluster_1 {
+         label = "Compute Resource \n Desktop B";
+     "i9-9900K" -> "fetch data to i9-9900K" -> "rtx3070 benchmark";   
+     }
+     "rtx3070 benchmark" -> end;
+     
+     start -> "connect vpn";
+     subgraph cluster_2 {
+         label = "Compute Resource \n Rivanna HPC";
+      "connect vpn" -> "fetch data \n to rivanna" -> "v100 benchmark" -> "disconnect vpn";
+      "fetch data \n to rivanna" -> "p100 benchmark" ->  "disconnect vpn";
+      "fetch data \n to rivanna" -> "a100 benchmark" ->  "disconnect vpn";
+      "fetch data \n to rivanna" -> "k80 benchmark" ->  "disconnect vpn";
+      "fetch data \n to rivanna" -> "rtx2080 benchmark" ->  "disconnect vpn";
+     }
+     "disconnect vpn" -> end; 
+     
+    }

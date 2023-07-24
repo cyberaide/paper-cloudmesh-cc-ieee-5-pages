@@ -1,0 +1,28 @@
+\FILE{contributing.tex}
+
+\subsection{Contributing}\label{contributing}
+
+All contributions are done under the Apache License.  The code is
+maintained as an Open Source project on GitHub while using the typical
+GitHub code management tools such as
+
+\begin{itemize}
+\item
+  \href{https://github.com/cloudmesh/cloudmesh-cc}{Code Repository}
+\item
+  \href{https://github.com/cloudmesh/cloudmesh-cc/issues}{Issue Management}
+\item
+  \href{https://github.com/cloudmesh/cloudmesh-cc/pulls}{Pull Request Management}
+\item
+  \href{https://github.com/cloudmesh/cloudmesh-cc/actions}{Automatic verification with GitHub Actions}
+\end{itemize}
+
+The main branch is the release branch and is supposed to be functional
+at all times. Hence, contributions are first done in other branches,
+and once agreeing that they need to be integrated into the code, they
+are merged into main. All new code must be documented and have
+sufficient automated tests.  Before creating a pull request it is
+important that the tests within the test directory are passing.  The
+repository already contains several pytests that can be leveraged to
+conduct routine testing of the code, including its SSH remote
+functionality, REST capability, and Python interface, among others.
