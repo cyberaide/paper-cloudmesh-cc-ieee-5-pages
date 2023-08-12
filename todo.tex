@@ -1,0 +1,159 @@
+
+\newcommand{\OK}{$\checkmark$}
+\newcommand{\ok}{$\checkmark$}
+
+{\bf done. Gregor registered} Each paper is required to have one author register for eScience using the author rate. https://www.escience-conference.org/2023/registration
+
+
+The camera ready version is due in a few days (14 August 2023). 
+
+----------------------- \OK \DONE{REVIEW 1} ---------------------
+
+\begin{itemize}
+\item  \ok \DONE{}The authors mention that it is easily adapted to other applications, are those applications exclusively from the MLsCommons benchmarks?
+
+see aprox. line 955. added citations \cite{las-22-arxiv-workflow-cc,las-22-mlcommons-science}
+
+
+\item \OK \DONE{} {\bf no space, should be added to larger paper} Related work section is really short. WfCommons is a framework for scientific workflows and also has a human-readable description of the workflows called WfFormat. There are many workflow management systems that could have been cited here for comparison (Pegasus, Kepler, etc..) Also our framework we developed existed before WfCommons as far as we know.
+
+\item \OK \DONE{6-11 are very small and hard to read}
+
+\item \OK \DONE{was already fixed, but not in submitted version} Section V has a typo: "As it uses templated virtual machine specification sit s easy to switch from one"
+
+\item \OK \DONE{} In Section IV, item C, the sentence: "In Figure ?? we showcase the execution of an experiment that combines the Cloudmesh.." the number of the figure did not come out. 
+
+\item \OK \DONE{} Section IV. In the same section, when talking about the experiment configuration, the authors say that the epochs are 1, 30 and 40, but in the code snippet, the epochs are set to 1, 30 and 60.
+
+\item \OK \DONE{added to conclusion.} The conclusion contains no future work/improvements/next steps, which brings some questions:
+
+\begin{itemize}
+\item \OK Are you going to run in bigger setups with more  HPC machines/ desktops/ cloud systems to evaluate the efficiency of your management system?
+
+\item \OK What if the application is data-driven? What about latency caused by IO operations?
+
+\item \OK What about  Communication/scheduling overhead for larger and more heterogenous set-ups? 
+
+\item \OK Those are all good future directions that could be explored with your management system.
+
+\end{itemize}
+
+\end{itemize}
+
+
+----------------------- \OK \DONE{REVIEW 2} ---------------------
+
+
+I see two main contributions from this work: 
+
+1) \OK the experiment execution that allows the users to iterate over different parameters for the scientific application to find the optimal set of parameters with the templated configurations and 
+
+2) \OK the claim of simplicity and execution portability of the framework.
+
+\DONE{do to space limitations this can not be elaborated on much. } 
+
+ I think that given the space the authors limited adding information that could have provided a much clearer picture of the work and project. 
+
+ 
+ 
+ 3) \OK The authors decide that it is out of the scope to mention many different workflow systems but it is key to provide a comparison of the novel aspects of this framework compared to other efforts in HPC and in Cloud of workflow management platforms  (e.g., Pegasus, Galaxy, Airflow, Argo workflows, Kubeflow) that also offer interactive ways of designing and executing scientific workflows on hybrid resources. 
+
+\OK \DONE{A reference to a much larger paper is provided, that however is not yet published on arxiv. This was the version originally submitted, but was 10 pages long and needed to be cut to 5 pages.}
+ 
+
+\begin{itemize}
+
+ \item \OK Another concern I have is in terms of storing the executed program and its output, what are the impacts in terms of resources for storing all this information? 
+
+ \DONE{Section IV.C. dded prediction sentence}
+ 
+ \item \OK Are there ways to filter or curate the data that is being saved? 
+
+ \SPACE{Scripts have been developed as templates to mine the data produced. HOwever they are not as of yet part of the framework, but can be copied from the application. There is no space to describe this in detail.}
+ 
+ \item \OK Also, there are some very vague claims about how the EE has significantly reduced the time for benchmarking but there is no clear experimental demonstration of this claim. 
+
+\SPACE{Due to space we can not give more details than this sentence. It has been used by multiple students, where 5 students did not use it while two students did use it. One of two switched to the framework as the program previously developed did not work as expected and introduced complexities into running the code that immediately could be resolved by the framework. Whenever we look at an application (by now 6) we find that using the framework simplifies things.}
+ 
+ \item \OK The use case section shows how the framework compares the runtime on different GPUs and the collection of hyperparameters but there is not a users perspective in terms of the integration of the workflow to the framework, additionally what are the efforts to adjust the hyperparameters and interface to your specific application. 
+
+\DONE{we added this is done for runtime predictions which is more elaborated on in the larger paper.}
+\SPACE{Space issues prevent us to write abut here in more detail.}
+ 
+ 
+ \item \OK Finally, what are the future steps of the project, what type of reusability efforts from user to user are available in the framework. 
+
+\DONE{We added some future steps while focusing on applications}
+
+\item \OK link to the GitHub repository. 
+
+\DONE{create and update cloudmesh-ee, include as reference.}
+
+\item \OK \DONE{} I think the authors need to motivate more the unique contributions of this workflow and why do we need to create a new one, already being invaded by many systems. 
+
+\SPACE{This is part of the paper, and in more detail elaborated in the 10 page original paper.}
+
+\TODO{Maybe: full stateless and state control is implemented within the queuing system or execution engine. state is communicated through simple print statements in log files that are monitored with pull requests. The system is completely restartable which is important for jobs that run many days. This is in the conclusion , but may need to be added elsewhere.}
+
+\item \OK \DONE{} In page 4, column 2 paragraph 1, there is an unlinked figure 
+
+
+\item \OK \DONE{paper is no longer 5 pages, but 6} Some figures are unreadable when the paper is printed
+
+\item \OK \DONE{not implementable. IEEE format specifically says figures must be used. see X. B. in guidelines.} Some figures (2 and 3 and the configuration file for cloudmask) should be code listings 
+
+
+\end{itemize}
+\end{itemize}
+
+----------------------- REVIEW 3 ---------------------
+The paper is a good fit for the rewords workshop and describes and offers a solution many computational scientists and machine learning practitioners face. 
+
+\begin{itemize}
+
+\item \OK \DONE{} The system is advertised to also extend to the cloud but it is not demonstrated in the evaluation.
+    
+\item \OK \DONE \SPACE{not focus of this paper, but potentially another paper with project that does benchmarks on AWS but not for MLComons} 
+
+
+\item \OK The structure and editing and the paper could be improved. While many important challenges are raised and sometimes detail is provided, 
+the consequences for the design or why a detail was shared is sometimes unclear putting a lot of burden on the reader to puzzle together.}
+
+\SPACE{Others commented paper is easy to understand. However do to space restrictions we needed to cut a lot of text}
+
+\item \OK The introduction, talks at great length about MLCommons, which is a fantastic initiative, but besides the affiliation of the activities, it is not clear how insights and access to the MLCommons helped refine the designs. 
+
+\OK \DONE{The framework is applied to aspiering researchers and not just MLCommons experts. THis is where the design requirements focus and is explained in the paper. }
+
+\TODO{motivate more that we do not just do a regular workflow but a workflow doing FAIR principle based reproducible workflows. Mention however the framework can be used for any task requiring orchestration on HPC and cloud systems.}
+
+\item \OK Two possible connection points seem to be Page 2, Section II, B, 1) mentions that best practices and needed features for workflow specification maybe learned from the past, and I could imagine MLCommons may have helped here, but in the current manuscript it is just a claim, that would benefit from additional context. 
+
+\SPACE{no space to present more then the claim?. We have worked on workflows since 1989 and many best practices have been ntecrated from our decades long experience. However many other frameworks exist. We focus her enot on a general Workflow Framework but on how we can execute experiments in reproducible fashion.}
+
+\item \OK Similarly, you note experiences and challenges with students and emphasize also focusing on the needs for educational context when defining these workflows. Some more details to understand in how far these experiences were quantified would be helpful.
+
+\SPACE{mention experience was gathered while observing students from at least 5 universities and their struggle to get benchmarks established on the HPC systems dealing with software carpeting, HPC access, and introduction to Deep Learning. Students were participating in an NSF sponsored REU. Cite cybertraining.}
+
+\item \OK Similarly, I think the requirements section could be sharpened. For example, Section II, A 1) and 2) formulate clear requirements in the description while 3) and 4) seem to enumerate modes of operation rather than refining the requirement.
+
+\DONE{The operation is part of the design requirements. I think the reviewer had design of workflow in mind while we have architectural requirements in mind. Maybe we switch to Workflow Design requirements and Operational requirements.
+
+Resolution: We added the term architecture design requirement to make it clear.
+} 
+
+\item \OK For Section II, B, 3, you identify monitoring as an important requirement, but later also begin discussing timers, potentially for performance. I would extend the workflow monitoring requirement beyond the aspects of orchestration and tracking progress to also include performance.
+
+\DONE{Added the word state and performance monitoring as in our understanding of monitoring it includes both classes}
+
+\item \OK On page 4, you write “We have defined a special status progress update specification that is universally applicable.” could you elaborate? Given the complexity and the integration across the systems you list, what mechanisms are you using to be universal?
+
+\SPACE{added through files incl stdout and stderr}
+
+\item \OK Also on page 4 you use lines of code as a metric for the simplicity requirement. But it is not clear if this refers to the LOC for your framework or the workflow you later run. Given the context, I would assume the framework, but the burden for users is not in the complexity of the framework implementation, but rather the changes and boilerplate they need for their workflow, and the number of concepts and features they have to familiarize themselves with to use your system effectively.
+
+\DONE{It applies to both. it is important that the framework be small so students can participate and contribute}
+
+\item \OK \DONE{} There is a minor typo in Section II, A. 3) where I believe it should say “Services”
+
+\end{itemize}

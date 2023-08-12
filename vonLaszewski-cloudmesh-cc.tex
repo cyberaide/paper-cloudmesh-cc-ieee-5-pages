@@ -5,6 +5,7 @@
 
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 
+
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
@@ -15,6 +16,7 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{fancyvrb}
 \usepackage{fvextra}
+\usepackage{xcolor}
 
 \PassOptionsToPackage{hyphens}{url}
 \pdfoutput=1
@@ -22,11 +24,10 @@
 \usepackage[pdf]{graphviz}
 
 \usepackage{fancyvrb}
-\usepackage{todonotes}
-\newcommand{\TODO}[1]{\todo[inline]{#1}}
-\newcommand{\NOTE}[1]{\textcolor{red}{[NOTE: #1]}}
-%\newcommand{\FILE}[1]{\todo[inline,color=green!20]{File: #1}}
-\newcommand{\FILE}[1]{}
+\newcommand{\TODO}[1]{\begin{quote}\color{red}{\em TODO:}{\bf #1}\end{quote}}
+\newcommand{\DONE}[1]{{\color{PineGreen}{\bf\em DONE:} #1}}
+\newcommand{\SPACE}[1]{{\color{blue}{\bf\em SPACE:} #1}}
+
 
 \renewcommand\IEEEkeywordsname{Keywords}
 \newcommand{\orcidicon}[1]{\href{https://orcid.org/#1}{\includegraphics[width=9pt]{orcid_icon}}}
@@ -87,6 +88,11 @@
 
     
 \begin{document}
+\pagenumbering{Roman}
+\input{todo}
+\pagenumbering{arabic}
+\setcounter{page}{0}
+
 
 \title{Templated Hybrid Reusable Computational Analytics Workflow Management with Cloudmesh, Applied to the Deep Learning MLCommons Cloudmask Application\thanks{Funded by NSF, DOE, NIST, and University of Virginia. In part funded by the NSF CyberTraining: CIC:
 CyberTraining for Students and Technologies from Generation Z with the
@@ -119,7 +125,7 @@ gcfexchange@gmail.com \\
 6\textsuperscript{th} Jeyan Thiyagalingam }
 \IEEEauthorblockA{\textit{Rutherford Appleton Laboratory}\\
 Harwell Campus\\
-Didcot, OX11 0QX, UK}
+Didcot, OX11 0QX, UK\vspace{-2cm}}
 %{\vspace{-0.2cm}\scriptsize
 %{juri.papay,samuel.jackson,t.jeyan\}\\
 %{\scriptsize @stfc.ac.uk}}
@@ -184,12 +190,10 @@ The benchmark uses a U-Net which is a deep neural network model with over two mi
  Science Working Group Cloudmask application. The code is available as
  an open-source project in GitHub and is based on an easy-to-enhance
  framework called Cloudmesh. It can be applied to other applications easily.
-
-
 \end{abstract}
 
 \begin{IEEEkeywords}
-experiment workflow, task workflow, high-performance computing, batch queue management, workflow web service
+experiment workflow, task workflow, hyperparameter workflow, high-performance computing, batch queue management, workflow web service. 
 \end{IEEEkeywords}
 
 
@@ -245,8 +249,6 @@ experiment workflow, task workflow, high-performance computing, batch queue mana
 
 % \input{cc.tex}
 
-\FILE{cc.tex}
-
 \section{Introduction}
 
 %In this section, we provide an introduction to our work while
@@ -262,12 +264,12 @@ The work presented here is an outcome of our contributions to the goals set fort
 
 As part of this activity, we are collaborating with a number of researchers, including aspiring researchers from various academic institutions. However, we are confronted with multiple challenges:
 (a) Many domain scientists are not sufficiently familiar with using high-performance computing (HPC) or other resources to conduct reproducible experiments reliably.
-(b) When dealing with different compute resources, special system configurations need to be developed for each resource, and these configurations may even vary from user to user on the various systems.
+(b) When dealing with different compute resources, special system configurations need to be developed and adapted for each resource, and these configurations may even vary from user to user on the various systems.
 (c) Creating a reproducible experiment is often out of scope as the focus for beginning students that may not have the time to run and understand the application during a semester activity.
-Together these aspects introduce a high entry barrier that is time-consuming to overcome.
+Together these aspects introduce a high entry barrier that is time-consuming to overcome. It also provides an unneccesarry hurdle of reusing MLCommons benchmarks by such users.
 
 What we strive to achieve is to make the situation simpler for the domain scientists and students while working at the same time towards the implementation of the FAIR principle \cite{www-fair} for the targeted MLCommons Science applications addressing the previously mentioned issues. As part of this, we focus on the implementation of hybrid task parallelism to address reproducibility on multiple target machines, leveraging parallel computing concepts. Additionally, we apply experiment management parallelism that automates the process of running permutations over various hyperparameters. Together these two concepts provide a powerful easy-to-use framework that we designed and implemented.
-Although we are applying our approach to other applications, we focus here on the MLCommons Cloudmask \cite{las-22-mlcommons-science} application that tries to identify the cloud cover from satellite images.
+Although we are applying our approach to other applications including some not from MLCommons, we focus here on the MLCommons Cloudmask \cite{las-22-mlcommons-science} application that tries to identify the cloud cover from satellite images.
 
 The paper is structured as follows. First, we discuss the important requirement aspects that influenced the design and implementation of our work in Section \ref{sec:requirements}. We then provide an overview of related research in Section \ref{sec:related-research}. Next, we present the design of the workflow framework in Section~\ref{sec:design}. To demonstrate the practical use of the framework, we showcase its capabilities to specify task-based workflows in Section \ref{sec:task-workflow}, followed by a detailed discussion on how to interface with the workflows. Additionally, we briefly outline other notable Cloudmesh features in Section \ref{sec:cloudmesh-other}. Furthermore, we illustrate how Cloudmesh can effectively coordinate hyperparameter-based workflows for the Cloudmask application in Section \ref{sec:cloudmask-workflow}. Finally, we present our conclusions in Section \ref{sec:conclusion}.
 
@@ -342,7 +344,7 @@ resources (a PC, for example).
 
 \end{comment}
 
-{\em Design Requirements.} For the design of the framework, we have the following requirements: (a) Simplicity, so that the framework can be easily reused, (b) Specificity, so the workflow can be specified precisely (c) Generality so that the workflow can be generally integrated as part of different frameworks or languages, (d) Monitoribility, so we can monitor long-running workflows, (e) Hybrid Resource integration, allowing the integration of on-premise and off-premises  HPC or cloud computing resources (f) Recoverable, so that state management can be recovered upon failure (g) Zero-install management install so that no backend services need to be available on the compute resources and existing services are used. 
+{\em Design Requirements.} For the architecture design of the framework, we have the following requirements: (a) Simplicity, so that the framework can be easily reused, (b) Specificity, so the workflow can be specified precisely (c) Generality so that the workflow can be generally integrated as part of different frameworks or languages, (d) State and Performance Monitoribility, so we can monitor long-running workflows, (e) Hybrid Resource integration, allowing the integration of on-premise and off-premises  HPC or cloud computing resources (f) Recoverable, so that state management can be recovered upon failure (g) Zero-install management install so that no backend services need to be available on the compute resources and existing services are used. 
 
 \begin{comment}
 \subsubsection{Simplicity}
@@ -410,8 +412,8 @@ workflow framework can be refreshed with the latest state.
 
 Many different workflow systems have been developed in the past. It is
 out of the scope of this document to present a complete overview of
-such different systems as presented in \cite{las-22-arxiv-workflow-cc}. As part of MLCommons a 
- MLCube \cite{www-mlcube} has been developed, which has a small number of overlapping features. It is configuring its workflows through YAML specification for organizing, running, and sharing machine learning experiments. However, it is not focusing on an integrated approach that encompasses task-based execution and the desire to discover new accuracy values as part of the benchmark. It is focused on using compute resources while executing a number of static benchmarks which is advantageous only if computational time benchmarks are considered. Furthermore, the current system has some limitations such that its Singularity implementation is not yet fully supported. We have collaborated with that team to communicate and propose changes to make MLCube more usable by the community. Overall our system provides a significant enhancement. However, once MLCube becomes more usable it could also be integrated into our effort.
+such different systems as presented in \cite{las-22-arxiv-workflow-cc}. As part of MLCommons 
+ MLCube \cite{www-mlcube} has been developed, which has a small number of overlapping features. It is configuring its workflows through YAML specification for organizing, running, and sharing machine learning experiments. However, it is not focusing on an integrated approach that encompasses task-based execution and the desire to discover new accuracy values as part of the benchmark. It is focused on using compute resources while executing a number of static benchmarks which is advantageous only if computational time benchmarks are considered. Furthermore, the current system has some limitations such that its Singularity implementation is not yet fully supported. We have collaborated with that team to communicate and propose changes to make MLCube more usable by the community. Overall our system provides a significant enhancement. However, once MLCube becomes more usable for our target systems it could also be integrated into our effort.
 
 
 
@@ -472,6 +474,7 @@ framework is depicted in Figure~\ref{fig:arch}.
 % figure is somewhat off-center so nudging it to the right - JPF
 \hspace{5px}
 \includegraphics[width=1.0\columnwidth]{images/cloudmesh-cc-arch.pdf}
+\vspace{-0.7cm}
 \caption{Architecture of the Framework}\label{fig:arch}
 \vspace{-0.5cm}
 \end{figure}
@@ -480,7 +483,7 @@ The framework is based on a layered architecture so that it can be improved
 and expanded on at each layer targeting developers and end users.
 For the end user, we provide a command line and an intuitive browser interface.  
 To support developers, we have designed a 
-Python API that is also used to implement a REST Service based on OpenAPI.
+Python API that is also used to implement a REST Services-based on OpenAPI.
 
 \subsection{Overview of the Task-based Workflow with the Compute Coordinator}
 
@@ -509,12 +512,12 @@ all jobs can be monitored. As our goal is not to run jobs that execute
 in milliseconds but rather in the second range, such status reporting
 and propagation is well-suited for us as our tasks are typically long-running.
 Our status progress update specification is universally
-applicable and thus can be issued by bash scripts, SLURM scripts, Python programs, Jupyter
+applicable fia integration into notifications through files (including stdout and stderr) and thus can be issued by bash scripts, SLURM scripts, Python programs, Jupyter
 notebooks, or any other computing language.
 The workflow status updates are implicitly augmented with timestamps, the compute resource, where it is resulting from, and additional messages to be sent to the monitoring component.
 Obviously, the workflow allows the specification of dependencies between tasks.
 
-The framework is managed through a number of open-source repositories in GitHub and
+The framework is managed through a number of open-source repositories in GitHub \cite{github-cloudmesh-ee,github-cloudmesh-ee} and
 uses Python as the implementation language. The code is compatible
 with Windows, macOS, and Linux.
 
@@ -538,6 +541,7 @@ Table~\ref{tab:node-attributes}, while details about the labels are listed in Ta
 \end{comment}
 
 \begin{figure}[htb]
+\vspace{-0.4cm}
 {\tiny 
 \begin{lstlisting}[breaklines=true]
 (*\bfseries workflow:*)
@@ -548,7 +552,6 @@ Table~\ref{tab:node-attributes}, while details about the labels are listed in Ta
        name: fetch-data
        user: gregor
        host: localhost
-       kind: local
        status: ready
        label: '{name}\nprogress={progress}'
        script: fetch-data.sh
@@ -556,7 +559,6 @@ Table~\ref{tab:node-attributes}, while details about the labels are listed in Ta
        name: compute
        user: gregor
        host: localhost
-       kind: local
        status: ready
        label: '{name}\nprogress={progress}'
        script: compute.sh
@@ -564,7 +566,6 @@ Table~\ref{tab:node-attributes}, while details about the labels are listed in Ta
       name: analyze
       user: gregor
       host: localhost
-      kind: local
       status: ready
       label: '{name}\nprogress={progress}'
       script: analyze.sh
@@ -584,7 +585,7 @@ Table~\ref{tab:node-attributes}, while details about the labels are listed in Ta
 
 
 {\fontsize{6pt}{6pt}\selectfont
-\begin{tabular}{|l|p{6cm}|}
+\begin{tabular}{|p{1cm}|p{6.5cm}|}
 \hline
 {\bf Attribute} & {\bf Description} \\
 \hline
@@ -614,7 +615,7 @@ script &  The script name to be executed \\
 \begingroup
 
 { \fontsize{6pt}{6pt}\selectfont
-  \begin{tabular}{|p{3.5cm}|p{4cm}|}
+  \begin{tabular}{|p{3cm}|p{4.5cm}|}
     \hline
     {\bf Name} & {\bf Description} \\
     \hline
@@ -648,6 +649,7 @@ script &  The script name to be executed \\
     \hline
 \end{tabular}
 }
+\vspace{-0.5cm}
 \endgroup
 
 \end{table}
@@ -692,7 +694,8 @@ Additional details of these APIs go beyond the purpose of this document and are 
 
 \begin{figure}[htb]
 \vspace{-0.5cm}
-{\fontsize{6pt}{6pt}\selectfont
+% {\fontsize{6pt}{6pt}\selectfont
+{\tiny
 \begin{lstlisting}[style=python]
   from cloudmesh.common.StopWatch import progress
   filename = './cloudmesh-log-file.log'
@@ -774,20 +777,21 @@ In addition to the aforementioned interfaces, we also provide a simple Web GUI i
 
 
 
-\begin{figure}[htb]
+\begin{figure*}[htb]
 \vspace{-0.5cm}
-\begin{minipage}[t]{0.49\columnwidth}
+\begin{minipage}[t]{0.99\columnwidth}
 \centering  \includegraphics[width=1.0\columnwidth]{images/table-cloudmask-workflow.png}
 %\caption{Table view.}
 %\label{fig:table-view}
 \end{minipage}
 \hfill
-\begin{minipage}[t]{0.49\columnwidth}
+\begin{minipage}[t]{0.99\columnwidth}
   \includegraphics[width=1.0\columnwidth]{images/gui-cloudmask-workflow.png}
 \end{minipage}
  \caption{Table and Graph view. Please zoom in for more details.}
 \label{fig:gui-view}
-\end{figure}
+\vspace{-0.5cm}
+\end{figure*}
 
 
 \begin{comment}
@@ -806,9 +810,8 @@ In addition to the aforementioned interfaces, we also provide a simple Web GUI i
 \subsection{Experiment Execution}
 \label{sec:workflow-sbatch}
 
-It is important to note that the system not only includes a task workflow system but also allows the execution of iterations over experiment parameters as used in identifying optimal parameter sets maximizing for example the accuracy of a scientific application. The component to coordinate this is called {\em Experiment Executor} (EE). In traditional machine learning workflows, hyperparameter tuning and configuration are key elements in assessing and optimizing the performance of models. However, scaling hyperparameters for highly parallel execution with heterogeneous hardware is complex. The EE can be used to generate many parameter settings including the utilization of the type of GPU or the system hardware on which the experiment is executed. In Figure \ref{fig:graph-view} we showcase the execution of an experiment that combines the Cloudmesh components of CC and EE to find the best accuracy across a number of different compute resources and GPUs. The EE jobs can utilize various queuing systems such as SLURM, and LSF, but also sequential and parallel ssh jobs. The scheduling of the jobs to be executed could be customized. For our simple example, we provide a simple Cartesian product for all experiment parameters provided. The advantage of this system is through the templated configuration files steering the application, quick adaptations can be made to identify more suitable hyperparameter settings. Furthermore, the use of the system implicitly promotes 
-the reaction of a unique directory for each experiment in which the executed program and its output are stored. This fosters reproducible experiments following the FAIR principles 
-As the structure of the experiment is including the hyperparameter settings, results from different computing systems can be merged into the overall results. Thus the EE supports the creation of coordinated results while allowing the generation of cooperating, selective, and distributed result generation. A simple experiment configuration file is showcased next, where we execute a scientific application called cloudmask for epochs 1, 30, and 40, on the GPUs v100 and a100 repeating it 5 times.
+It is important to note that the system not only includes a task workflow system but also allows the execution of iterations over experiment parameters as used in identifying optimal parameter sets maximizing for example the accuracy of a scientific application. The component to coordinate this is called {\em Experiment Executor} (EE). In traditional machine learning workflows, hyperparameter tuning and configuration are key elements in assessing and optimizing the performance of models. However, scaling hyperparameters for highly parallel execution with heterogeneous hardware is complex. The EE can be used to generate many parameter settings including the utilization of the type of GPU or the system hardware on which the experiment is executed. In Figure \ref{fig:gui-view} we showcase the execution of an experiment that combines the Cloudmesh components of CC and EE to find the best accuracy across a number of different compute resources and GPUs. The EE jobs can utilize various queuing systems such as SLURM, and LSF, but also sequential and parallel ssh jobs. The scheduling of the jobs to be executed could be customized. For our simple example, we provide a simple Cartesian product for all experiment parameters provided. The advantage of this system is through the templated configuration files steering the application, quick adaptations can be made to identify more suitable hyperparameter settings. Furthermore, the use of the system implicitly promotes the reaction of a unique directory for each experiment in which the executed program and its output are stored. This fosters reproducible experiments following the FAIR principles 
+As the structure of the experiment is including the hyperparameter settings, results from different computing systems can be merged into the overall results. Thus the EE supports the creation of coordinated results while allowing the generation of cooperating, selective, and distributed result generation. A simple experiment configuration file is showcased next, where we execute a scientific application called cloudmask for epochs 1, 30, and 60, on the GPUs v100 and a100 repeating it 5 times.
 
 {\scriptsize
 \begin{lstlisting}[breaklines=true]
@@ -822,9 +825,9 @@ As the structure of the experiment is including the hyperparameter settings, res
 \end{lstlisting}
 }
 
-Dependent on the queuing system a custom templated batch script utilizing these variables is created and used during the experiment execution. As it is templated and user-independent, it can then also be executed via different user accounts, either separately, or jobs being split up across different user accounts. An additional benefit from our templated executions is that an energy monitor can be integrated creating energy traces throughout the calculation. This helps as we can also compare and predict the energy consumption for long-running jobs which is of considerable importance due to the overall resources consumed by many scientific deep learning applications. 
+Dependent on the queuing system a custom templated batch script utilizing these variables is created and used during the experiment execution. As it is templated and user-independent, it can then also be executed via different user accounts, either separately, or jobs being split up across different user accounts. An additional benefit from our templated executions is that an energy monitor can be integrated creating energy traces throughout the calculation. This helps as we can also compare and predict the energy consumption for long-running jobs which is of considerable importance due to the overall resources consumed by many scientific deep learning applications. Furthermore, we developed the best practice to predict for deep learning applications the computational and storage needs base on a few hyperparameter combinations so that planing can take place to acquire sufficient resources for long running templated experiments.
 
-While practically working with the system, we observed that students not using our experiment executor spend a significant amount (weeks-months) of a semester on setting up a benchmark and replicating only a fraction of the functionality provided by the EE. However, we tested the system out while other students used EE and we observed that the applications for which a template and configuration file has been designed reduced the on-ramp time to less than a day.
+While practically working with the system, we observed that students (as part of research experiences) not using our experiment executor spend a significant amount (weeks-months) of a semester on setting up a benchmark and replicating only a fraction of the functionality provided by the EE. However, we tested the system out while other students used EE and we observed that the applications for which a template and configuration file has been designed reduced the on-ramp time to less than a day.
 
 \section{Other Cloudmesh Features}
 \label{sec:cloudmesh-other}
@@ -839,13 +842,17 @@ For benchmarking, Cloudmesh also automatically exports MLCommons log events but 
 \section{MLCommons Cloudmask Workflow}
 \label{sec:cloudmask-workflow}
 
-We have applied the CC and EE workflow system to a number of applications. However, here we only summarize our experience as applied to the MLCommons Science Group Cloudmask application.
+We are applying the CC and EE workflow system to a number of MLCommons and non MLCommons applications \cite{las-22-arxiv-workflow-cc,las-22-mlcommons-science}. However, here we only summarize our experience as applied to the MLCommons Science Group Cloudmask application.
 
 Cloudmask is a program that develops a model to classify sections of
 satellite images as either containing clouds or clear skies by using
 machine learning \cite{www-cloudmask}. We used CC to coordinate the execution of cloudmask between different systems and EE to execute various parameter settings and iterate over the chosen hyperparameters.
 This includes an HPC computer at the University of Virginia called Rivanna, as well as two desktop
-computers (Figure ~\ref{fig:gui-view}). As we are able to coordinate the execution of the workflows across different machines and merge the results we were able to easily create a runtime comparison between the different compute resources (see Figure~\ref{fig:runtime-comp}, here shown only for one epoch). An automated script has been developed that produces the selected outputs that one usually finds with deep learning parameter studies (\ref{fig:runtime-comp}-\ref{fig:inf-acc-spectrum}). The workflow runs approximately 24 hours while producing the results in parallel on multiple compute resources and multiple GPUS.
+computers (Figure ~\ref{fig:gui-view}). As we are able to coordinate the execution of the workflows across different machines and merge the results we were able to easily create a runtime comparison between the different compute resources (see Figure~\ref{fig:runtime-comp}, here shown only for one epoch). 
+
+
+
+An automated script has been developed that produces the selected outputs that one usually finds with deep learning parameter studies (\ref{fig:runtime-comp}-\ref{fig:inf-acc-spectrum}). The workflow runs approximately 24 hours while producing the results in parallel on multiple compute resources and multiple GPUS. 
 
 \begin{comment}
 \begin{figure*}[htb]
@@ -892,57 +899,58 @@ Inference accuracy over sample as a spectrum
 \begin{figure}[htb]
 {
 \begin{center}
-\includegraphics[width=0.75\columnwidth]{images/rivanna-comparision-epoch-1.pdf}
+\includegraphics[width=0.99\columnwidth]{images/rivanna-comparision-epoch-1.pdf}
 \end{center}
 }
 \vspace{-0.7cm}
 \caption{Runtime comparisons of Cloudmask between graphics cards}
 \label{fig:runtime-comp}
+\vspace{-0.5cm}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%
 
-\begin{figure}[htb]
+\begin{figure*}[htb]
 
 %%%%%%%%%%%%%%%%%%%%%
-\begin{minipage}[t]{0.3\columnwidth}
-\includegraphics[width=1.0\columnwidth]{images/training-history-val_accuracy.pdf}
+\begin{minipage}[t]{0.3\textwidth}
+\includegraphics[width=1.0\textwidth]{images/training-history-val_accuracy.pdf}
 \caption{Training history validation accuracy}
 \label{fig:train-hist-val-acc}
 \end{minipage}
 \hfill
-\begin{minipage}[t]{0.3\columnwidth}
-\includegraphics[width=1.0\columnwidth]{images/training-history-val_loss.pdf}
+\begin{minipage}[t]{0.3\textwidth}
+\includegraphics[width=1.0\textwidth]{images/training-history-val_loss.pdf}
 \caption{Training history validation loss}
 \label{fig:train-hist-val-loss}
 \end{minipage}
 \hfill
-\begin{minipage}[t]{0.3\columnwidth}
-\includegraphics[width=1.0\columnwidth]{images/training-history-accuracy.pdf}
+\begin{minipage}[t]{0.3\textwidth}
+\includegraphics[width=1.0\textwidth]{images/training-history-accuracy.pdf}
 \caption{Training history accuracy}
 \label{fig:train-hist-acc}
 \end{minipage}
 
 
-\begin{minipage}[t]{0.3\columnwidth}
-\includegraphics[width=1.0\columnwidth]{images/training-history-loss.pdf}
+\begin{minipage}[t]{0.3\textwidth}
+\includegraphics[width=1.0\textwidth]{images/training-history-loss.pdf}
 \caption{Training history loss}\label{fig:train-hist-loss}
 \end{minipage}
 \hfill
-\begin{minipage}[t]{0.3\columnwidth}
-\includegraphics[width=1.0\columnwidth]{images/inference-accuracy.pdf}
+\begin{minipage}[t]{0.3\textwidth}
+\includegraphics[width=1.0\textwidth]{images/inference-accuracy.pdf}
 \caption{Inference accuracy}
 \label{fig:inf-acc}
 \end{minipage}
 \hfill
-\begin{minipage}[t]{0.3\columnwidth}
-\includegraphics[width=1.0\columnwidth]{images/spectrum-inference-accuracy.pdf}
+\begin{minipage}[t]{0.3\textwidth}
+\includegraphics[width=1.0\textwidth]{images/spectrum-inference-accuracy.pdf}
 \caption{Inference accuracy over sample as a spectrum.}
 \label{fig:inf-acc-spectrum}
 \end{minipage}
 \vspace{-0.5cm}
 
-\end{figure}
+\end{figure*}
 
 
 \section{Conclusion}
@@ -961,25 +969,30 @@ simple API and a REST interface are provided. The framework also has
 an elementary Web browser interface that allows visualizing the
 execution of the workflow. It is important to know that the workflow
 can be started on remote resources and is running completely
-independently from the client tool once a task is started. This allows
+independently from the client tool once a task is started in contrast to many other workflow systems. This allows
 a ``stateless'' model that can synchronize with the remotely started
-jobs on demand. Hence, the framework is self-recovering in case of
-network interruptions or power failure. Due to our experiences with
+jobs on demand through pull request. Hence, the framework is self-recovering in case of
+network interruptions or power failure eve on the client side. Due to our experiences with
 real (and many) infrastructure failures at the authors' locations, the
 availability of such a workflow-guided system was
-beneficial. Furthermore, the developed code is rather small and, in
-contrast to other systems, is less complex. Hence, it is suitable for
+beneficial. Although very large graphs can be created we envision the utilization for graphs between 1 - 1000 nodes. 
+ The targeted task based run from minutes to hours and days and the state synchronization is fast in comparison to the runtime of individual tasks.
+The developed code is rather small and, in
+contrast to other systems, is less complex. The workflow specification and integration of monitoring is easy.
+Hence, it is suitable for
 educational aspects as it is used for master's and undergraduate-level
-research projects. The project has also been practically utilized
+research projects to apply the workflow, but also to enhance it. The project has and is practically utilized
 while generating benchmarks for the MLCommons Science Working Group
-showcasing real-world applicability beyond a student research project.
+showcasing real-world applicability beyond a student research project. 
 Most importantly, the work to execute such benchmarks has been reduced 
-from weeks to a day.
+from weeks to a day. The framework was first used to unexpectedly discover and report IO latency's while comparing traditional HPC systems with very fast desktops using NVMe's, resulting in recommendations improving the IO storage of the HPC system. Thus the framework not only allows fast on-ramp time for users, but has been used to communicate system related performance issues that since have been improved. Future activities include adaptation to more applications. 
+
+\end{itemize}
 
 
 \section*{Acknowledgment}
 
-Work was in part funded by the NSF CyberTraining: CIC: CyberTraining for Students and Technologies from Generation Z with the award numbers 1829704 and 2200409 and NIST 60NANB21D151T.  The work was also funded by the Department of Energy under the grant Award No. DE-SC0023452. The work was conducted at the Biocomplexity Institute and Initiative at the University of Virginia. This work was also supported by Wave 1 of The UKRI Strategic Priorities Fund under the EPSRC Grant EP/T001569/1, particularly the "AI for Science" theme within that grant, by the Alan Turing Institute, and by the Benchmarking for AI for Science at Exascale (BASE) project under the EPSRC Grant EP/V001310/1.
+Work was in part funded by (a)  NIST 60NANB21D151T (a) NSF CyberTraining: CIC: CyberTraining for Students and Technologies from Generation Z with the award numbers 1829704 and 2200409 and NIST 60NANB21D151T (b) Department of Energy under the grant Award No. DE-SC0023452 (c) the Biocomplexity Institute and Initiative at the University of Virginia.  We like to thank the reviewers for their valuable feedback.
 
 
 \bibliographystyle{IEEEtran}
